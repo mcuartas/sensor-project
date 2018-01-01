@@ -1,9 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+	
 	<head>
 		<title>Sensor monitoring dashboard</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="style.css" rel="stylesheet">
 	</head>
+	
 	<body>
-		<p><strong>14</strong> ºC</p>
+		<header>Panel de sensores</header>
+		<div class="container">
+			<div class="temperature">
+				<p class="title">Temperatura</p>
+				<p class="value" id="temperature-display">Cargando...</p>
+				<p class="unit">ºC</p>
+			</div>
+			<div class="humidity">
+				<p class="title">Humedad</p>
+				<p class="value" id="humidity-display">Cargando...</p>
+				<p class="unit">%</p>
+			</div>
+		</div>
+		
+		<script src="script.js"></script>
 	</body>
+	
 </html>
