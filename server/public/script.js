@@ -77,8 +77,6 @@ const fetchTemperatureHistory = () => {
 	})
 }
 
-fetchTemperatureHistory()
-
 const fetchHumidityHistory = () => {
 	fetch('/humidity/history')
 	.then(results => {
@@ -94,8 +92,6 @@ const fetchHumidityHistory = () => {
 		humidityChart.update()
 	})
 }
-
-fetchHumidityHistory()
 
 const temperatureDisplay = document.getElementById('temperature-display')
 const humidityDisplay = document.getElementById('humidity-display')
@@ -130,7 +126,83 @@ const fetchHumidity = () => {
 	})
 }
 
-setInterval(() => {
-	fetchTemperature()
-	fetchHumidity()
-}, 10000)
+function getParameterByName(name) {
+	const url = window.location.href
+	name = name.replace(/[\[\]]/g, '\\$&')
+	const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+	const results = regex.exec(url)
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, ''))
+}
+
+const fetchTemperatureRange = () => {
+
+	const start = getParameterByName('start')
+	const end = getParameterByName('end')
+
+	fetch(`/temperature/range?start=${start}&end=${end}`)
+	.then(results => {
+		return results.json()
+	})
+	.then(data => {
+		data.forEach(reading => {
+			const time = new Date(reading.createdAt + 'Z')
+			const formattedTime = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+			pushData(temperatureChartConfig.data.labels, formattedTime, 10)
+			pushData(temperatureChartConfig.data.datasets[0].data, reading.value, 10)
+		})
+		temperatureChart.update()
+	})
+
+	fetch(`/temperature/average?start=${start}&end=${end}`)
+	.then(results => {
+		return results.json()
+	})
+	.then(data => {
+		temperatureDisplay.innerHTML = '<strong>' + data.value + '</strong>'
+	})
+}
+
+const fetchHumidityRange = () => {
+
+	const start = getParameterByName('start')
+	const end = getParameterByName('end')
+
+	fetch(`/humidity/range?start=${start}&end=${end}`)
+	.then(results => {
+		return results.json()
+	})
+	.then(data => {
+		data.forEach(reading => {
+			const time = new Date(reading.createdAt + 'Z')
+			const formattedTime = time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+			pushData(humidityChartConfig.data.labels, formattedTime, 10)
+			pushData(humidityChartConfig.data.datasets[0].data, reading.value, 10)
+		})
+		humidityChart.update()
+	})
+
+	fetch(`/humidity/average?start=${start}&end=${end}`)
+	.then(results => {
+		return results.json()
+	})
+	.then(data => {
+		humidityDisplay.innerHTML = '<strong>' + data.value + '</strong>'
+	})
+}
+
+if (!getParameterByName('start') && !getParameterByName('end')) {
+	
+	setInterval(() => {
+		fetchTemperature()
+		fetchHumidity()
+	}, 2000)
+	fetchHumidityHistory()
+	fetchTemperatureHistory()
+}
+else
+{
+	fetchTemperatureRange()
+	fetchHumidityRange()
+}
