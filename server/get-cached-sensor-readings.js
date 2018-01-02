@@ -16,7 +16,7 @@ setInterval(() => {
 		cache.temperature = temperature
 		cache.humidity = humidity
 	})
-}, 10000)
+}, 2000)
 
 module.exports.getTemperature = () => cache.temperature
 module.exports.getHumidity = () => cache.humidity
