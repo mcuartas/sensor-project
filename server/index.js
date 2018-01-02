@@ -59,7 +59,7 @@ app.get('/temperature/average', function(req, res) {
 			return res.status(500).end()
 		}
 		res.json({
-			value: results['avg(value)'].toFixed(1)
+			value: (results['avg(value)'] || 0).toFixed(1)
 		})
 	})
 })
@@ -85,7 +85,7 @@ app.get('/humidity/average', function(req, res) {
 			return res.status(500).end()
 		}
 		res.json({
-			value: results['avg(value)'].toFixed(1)
+			value: (results['avg(value)'] || 0).toFixed(1)
 		})
 	})
 })
