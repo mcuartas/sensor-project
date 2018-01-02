@@ -17,6 +17,26 @@ app.get('/humidity', function(req, res) {
 	})
 });
 
+app.get('/temperature/history', function(req, res) {
+	databaseOperations.fetchLatestReadings('temperature', 10, (err, results) => {
+		if(err) {
+			console.error(err)
+			return res.status(500).end()
+		}
+		res.json(results.reverse())
+	})
+})
+
+app.get('/humidity/history', function(req, res) {
+	databaseOperations.fetchLatestReadings('humidity', 10, (err, results) => {
+		if(err) {
+			console.error(err)
+			return res.status(500).end()
+		}
+		res.json(results.reverse())
+	})
+})
+
 app.listen(3000, function(){
 	console.log('Server listening on port 3000');
 });
