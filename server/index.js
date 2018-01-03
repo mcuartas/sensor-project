@@ -4,6 +4,38 @@ const path = require('path')
 const getCachedSensorReadings = require('./get-cached-sensor-readings')
 const databaseOperations = require('./database-operations')
 
+const http = require('http')
+const socketIO = require('socket.io')
+const {subscribe, unsubscribe} = require('./notifier')
+
+const httpServer = http.Server(app)
+const io = socketIO(httpServer)
+
+io.on('connection', socket => {
+
+	console.log(`User connected [${socket.id}]`)
+
+	const pushTemperature = newTemperature => {
+		socket.emit('new-temperature', {
+			value: newTemperature
+		})
+	}
+
+	const pushHumidity = newHumidity => {
+		socket.emit('new-humidity', {
+			value: newHumidity
+		})
+	}
+
+	subscribe(pushTemperature, 'temperature')
+	subscribe(pushHumidity, 'humidity')
+
+	socket.on('disconnect', () => {
+		unsubscribe(pushTemperature, 'temperature')
+		unsubscribe(pushHumidity, 'humidity')
+	})
+})
+
 app.use('/public', express.static(path.join(__dirname, 'public')))
 
 app.get('/temperature', function(req, res) {
@@ -90,6 +122,10 @@ app.get('/humidity/average', function(req, res) {
 	})
 })
 
-app.listen(3000, function(){
+httpServer.listen(3000, function(){
 	console.log('Server listening on port 3000');
 });
+
+//appServer.listen(3000, function(){
+//	console.log('Server listening on port 3000');
+//});
