@@ -12,7 +12,7 @@ const unsubscribe = (removedListener, type) => {
 		listener !== removedListener)
 }
 
-const notity = (value, type) => {
+const notify = (value, type) => {
 	listeners[type].forEach(listener => {
 		listener(value)
 	})
