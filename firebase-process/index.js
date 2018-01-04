@@ -11,12 +11,14 @@ const db = admin.database()
 const temperatureRef = db.ref('temperature')
 const humidityRef = db.ref('humidity')
 
+console.log('Uploading data every 10 seconds...');
+
 setInterval(() => {
 	getSensorReadings((err, temperature, humidity) => {
 		if(err) {
 			return console.error(err)
 		}
-		temperatureRef.set(temperature)
-		humidityRef.set(humidity)
+		temperatureRef.set((temperature || 0.0).toFixed(1))
+		humidityRef.set((humidity|| 0.0).toFixed(1))
 	})
-}, 4000)
+}, 10000)
