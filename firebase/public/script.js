@@ -71,6 +71,32 @@ const pushData = (arr, value, maxLen) => {
 const temperatureDisplay = document.getElementById('temperature-display')
 const humidityDisplay = document.getElementById('humidity-display')
 
+/*
+ * Firebase
+ */
+
+const database = firebase.database()
+
+const temperatureListener = database.ref('temperature')
+temperatureListener.on('value', data => {
+	const now = new Date()
+	const timeNow = now.GetHours() + ':' + now.GetMinutes() + ':' + now.GetSeconds()
+	pushData(temperatureChartConfig.data.labels, timeNow, 10)
+	pushData(temperatureChartConfig.data.datasets[0].data, data.val(), 10)
+	temperatureChart.update()
+	temperatureDisplay.innerHTML = '<strong>' + data.val() + '</strong>'
+})
+
+const humidityListener = database.ref('humidity')
+humidityListener.on('value', data => {
+	const now = new Date()
+	const timeNow = now.GetHours() + ':' + now.GetMinutes() + ':' + now.GetSeconds()
+	pushData(humidityChartConfig.data.labels, timeNow, 10)
+	pushData(humidityChartConfig.data.datasets[0].data, data.val(), 10)
+	humidityChart.update()
+	humidityDisplay.innerHTML = '<strong>' + data.val() + '</strong>'
+})
+
 const fetchTemperature = () => {
 	
 }
