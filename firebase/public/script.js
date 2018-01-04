@@ -80,7 +80,7 @@ const database = firebase.database()
 const temperatureListener = database.ref('temperature')
 temperatureListener.on('value', data => {
 	const now = new Date()
-	const timeNow = now.GetHours() + ':' + now.GetMinutes() + ':' + now.GetSeconds()
+	const timeNow = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds()
 	pushData(temperatureChartConfig.data.labels, timeNow, 10)
 	pushData(temperatureChartConfig.data.datasets[0].data, data.val(), 10)
 	temperatureChart.update()
@@ -90,7 +90,7 @@ temperatureListener.on('value', data => {
 const humidityListener = database.ref('humidity')
 humidityListener.on('value', data => {
 	const now = new Date()
-	const timeNow = now.GetHours() + ':' + now.GetMinutes() + ':' + now.GetSeconds()
+	const timeNow = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds()
 	pushData(humidityChartConfig.data.labels, timeNow, 10)
 	pushData(humidityChartConfig.data.datasets[0].data, data.val(), 10)
 	humidityChart.update()
