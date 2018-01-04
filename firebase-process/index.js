@@ -1,7 +1,6 @@
 const getSensorReadings = require('./get-sensor-readings')
-
-var admin = require('firebase-admin')
-var serviceAccount = require('/home/pi/sensor-project-firebase-key.json')
+const admin = require('firebase-admin')
+const serviceAccount = require('/home/pi/sensor-project-firebase-key.json')
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
